@@ -1,4 +1,18 @@
 #pragma once
+/**=====================================================================================================
+* Copyright 2024, THE COLLEGE OF GEOSCIENCE AND SURVEYING ENGINEERING, CHINA UNIVERSITY OF MINING AND TECHNOLOGY (BEIJING)
+* BEIJING, CHINA
+* All Rights Reserved
+* Authors: Fanqiang Meng.
+* Do not hesitate to contact the authors if you have any question or find any bugs
+* Email: fq.meng@student.cumtb.edu.cn
+* See LICENSE for the license information
+//=======================================================================================================
+*/
+* Thanks to the work of Yan, et al:
+* https://github.com/MasterFlashQ/GROR
+*/
+
 #ifndef INITIALCORRESPONDENCES_H_
 #define INITIALCORRESPONDENCES_H_
 #include <iostream>
