@@ -10,7 +10,7 @@
 //=======================================================================================================
 */
 * Thanks to the work of Yan, et al:
-* https://github.com/MasterFlashQ/GROR
+* https://github.com/WPC-WHU/GROR
 */
 
 #ifndef INITIALCORRESPONDENCES_H_
