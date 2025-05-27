@@ -47,6 +47,7 @@ inline bool MAGSC::MagscReg<Point>::Symmetrycheck(const int p1_index_, const int
 	_4_3_T << target_pcd_->points[p4_index_].x - target_pcd_->points[p3_index_].x,
 		target_pcd_->points[p4_index_].y - target_pcd_->points[p3_index_].y,
 		target_pcd_->points[p4_index_].z - target_pcd_->points[p3_index_].z;
+	
 	float angle_threshold, _4_3_angle_S, _4_3_angle_T;
 	float dis_3_4 = pcl::geometry::distance(target_pcd_->points[p4_index_], target_pcd_->points[p3_index_]);
 	angle_threshold = 180 * asin(resolution_ / dis_3_4) / M_PI;
@@ -67,11 +68,14 @@ inline void MAGSC::MagscReg<Point>::computeCompatibility()
 	compatibility_degree.resize(N, std::pair<int,int>(0,0));
 	compatibility_set.resize(N);
 	degree_.resize(N, 0);
+	
 #pragma omp parallel for
 	for (int i = 0; i < N; i++)
 	{
 		compatibility_degree[i].second = i;
+		
 		int index_i = i;
+		
 		for (int j = 0; j < N; j++)
 		{
 			if (j >= i)
@@ -92,10 +96,13 @@ inline void MAGSC::MagscReg<Point>::computeCompatibility()
 				{
 					compatibility_matrix(i, j) = 1;
 					compatibility_matrix(j, i) = 1;
+					
 					compatibility_degree[i].first++;
 					compatibility_degree[j].first++;
+					
 					compatibility_set[i].insert(j);
 					compatibility_set[j].insert(i);
+					
 					degree_[i] += 1;
 					degree_[j] += 1;
 				}
@@ -110,39 +117,49 @@ inline void MAGSC::MagscReg<Point>::Graphcluster(std::vector<std::set<int>>& Clu
 	std::vector<std::vector<std::pair<int, int>>>& Correlation_degree_)
 {
 	std::set<int> Seed_points_index;//seed points index for candidate generate
+	
 	for (int i = 0; i < compatibility_degree.size(); i++)
 	{
 		Seed_points_index.insert(compatibility_degree[i].second);//set all nodes as seed points
 	}
+	
 	for (int index_i = 0; index_i < compatibility_degree.size(); index_i++)
 	{
 		int i = compatibility_degree[index_i].second;//index of nodes
+		
 		if (compatibility_degree[index_i].first < 2)//node degree<2,break
 		{
 			break;
 		}
+		
 		if (Seed_points_index.count(i) != 1)
 		{
 			continue;
 		}
+		
 		std::vector<std::pair<int, int>> CD_of_i;
 		std::set<int> graph_cluster_set_of_i;
 
 		for (int index_j = 0; index_j < compatibility_degree.size(); index_j++)
 		{
 			int j = compatibility_degree[index_j].second;
+			
 			if (compatibility_degree[index_j].first < 2)
 			{
 				break;
 			}
+			
 			if (index_i == index_j)
 			{
 				continue;
 			}
+			
 			if (compatibility_matrix(i, j) == 1)
 			{
 				std::set<int> intersect_set_i_j;
+				
 				set_intersection(compatibility_set[i].begin(), compatibility_set[i].end(), compatibility_set[j].begin(), compatibility_set[j].end(), inserter(intersect_set_i_j, intersect_set_i_j.begin()));
+				
 				if (intersect_set_i_j.size() > 0)
 				{
 					Seed_points_index.erase(j);
@@ -172,6 +189,7 @@ inline void MAGSC::MagscReg<Point>::GloballySpatialConsistency(std::vector<std::
 	std::vector<int> & maximum_consensus_index_)
 {
 	int maximum_count = 0;
+	
 	for (auto index_i : Cluster_candidate_size_)
 	{
 		if (index_i.first < maximum_count)
@@ -205,10 +223,12 @@ inline void MAGSC::MagscReg<Point>::GloballySpatialConsistency(std::vector<std::
 				int p3_index = index_k;
 				if (compatibility_matrix(p2_index, p3_index) != 1 || degree_[p3_index] <maximum_count)
 					continue;
+				
 				float p3Top12S;
 				p3Top12S = point2lineDistance(source_pcd_->points[p3_index], source_pcd_->points[p2_index], source_pcd_->points[p1_index]);
 				float p3Top12T;
 				p3Top12T = point2lineDistance(target_pcd_->points[p3_index], target_pcd_->points[p2_index], target_pcd_->points[p1_index]);
+				
 				if (p3Top12T < 2 * resolution_ || p3Top12S < 2 * resolution_)
 					continue;
 				inliers_temp.clear();
@@ -225,8 +245,10 @@ inline void MAGSC::MagscReg<Point>::GloballySpatialConsistency(std::vector<std::
 			}
 			if (inliers_temp.size() > maximal_consensus.size())
 				maximal_consensus = inliers_temp;
+			
 			maximal_consensus.push_back(p2_index);
 			maximal_consensus.push_back(p1_index);
+			
 			if (maximal_consensus.size() > maximum_count)
 			{
 				maximum_consensus_index_=maximal_consensus;
