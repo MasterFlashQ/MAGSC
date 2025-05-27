@@ -2,10 +2,17 @@
 
 void ICS::Voxeldownsample(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_out, double resolution)
 {
-	pcl::VoxelGrid<pcl::PointXYZ> vox;
-	vox.setLeafSize(resolution, resolution, resolution);
-	vox.setInputCloud(cloud_in);
-	vox.filter(*cloud_out);
+	//format for filtering
+	pcl::PCLPointCloud2::Ptr cloud2(new pcl::PCLPointCloud2());
+	pcl::PCLPointCloud2::Ptr cloudVG2(new pcl::PCLPointCloud2());
+	pcl::toPCLPointCloud2(*cloud_in, *cloud2);
+	//set up filtering parameters
+	pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
+	sor.setInputCloud(cloud2);
+	sor.setLeafSize(resolution, resolution, resolution);
+	//filtering process
+	sor.filter(*cloudVG2);
+	pcl::fromPCLPointCloud2(*cloudVG2, *cloud_out);
 }
 
 void ICS::ExtractKeypoints(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, pcl::PointCloud<pcl::PointXYZ>::Ptr keypoints, pcl::PointIndicesPtr ISS_Idx, double resolution)
