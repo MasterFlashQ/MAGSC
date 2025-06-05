@@ -7,9 +7,11 @@ inline float MAGSC::MagscReg<Point>::point2lineDistance(const Point& P_p, const 
 	Eigen::Vector3f P(P_p.x, P_p.y, P_p.z);
 	Eigen::Vector3f A(P_a.x, P_a.y, P_a.z);
 	Eigen::Vector3f B(P_b.x, P_b.y, P_b.z);
+	
 	Eigen::Vector3f AP = P - A;
 	Eigen::Vector3f AB = B - A;
 	Eigen::Vector3f cross = AP.cross(AB);
+	
 	float crossLength = cross.norm();
 	float ABLength = AB.norm();
 	return crossLength / ABLength;
@@ -41,6 +43,7 @@ inline bool MAGSC::MagscReg<Point>::Symmetrycheck(const int p1_index_, const int
 
 	Eigen::Vector3d _4_3_S;
 	Eigen::Vector3d _4_3_T;
+	
 	_4_3_S << source_pcd_->points[p4_index_].x - source_pcd_->points[p3_index_].x,
 		source_pcd_->points[p4_index_].y - source_pcd_->points[p3_index_].y,
 		source_pcd_->points[p4_index_].z - source_pcd_->points[p3_index_].z;
@@ -168,6 +171,7 @@ inline void MAGSC::MagscReg<Point>::Graphcluster(std::vector<std::set<int>>& Clu
 					{
 						Seed_points_index.erase(*k);
 					}
+					
 					CD_of_i.push_back(std::make_pair(intersect_set_i_j.size(), j));
 				}
 			}
@@ -194,16 +198,24 @@ inline void MAGSC::MagscReg<Point>::GloballySpatialConsistency(std::vector<std::
 	{
 		if (index_i.first < maximum_count)
 			break;
+		
 		int p1_index = index_i.second.first;
+		
 		if (degree_[p1_index]< maximum_count)
 			continue;
+		
 		int cluster_index = index_i.second.second;
+		
 		std::vector<std::pair<int, int>> correlation_degree_set = Correlation_degree_[cluster_index];
+		
 		std::sort(correlation_degree_set.rbegin(), correlation_degree_set.rend());
+		
 		std::set<int> cluster_i = Cluster_candidate_[cluster_index];
+		
 		for (auto index_j : correlation_degree_set)
 		{
 			int p2_index = index_j.second;
+			
 			if (degree_[p2_index] < maximum_count)
 				continue;
 			if (index_j.first < maximum_count - 1)
@@ -218,9 +230,11 @@ inline void MAGSC::MagscReg<Point>::GloballySpatialConsistency(std::vector<std::
 
 			std::vector<int> maximal_consensus;
 			std::vector<int> inliers_temp;
+			
 			for (auto index_k : cluster_i)
 			{
 				int p3_index = index_k;
+				
 				if (compatibility_matrix(p2_index, p3_index) != 1 || degree_[p3_index] <maximum_count)
 					continue;
 				
@@ -232,9 +246,11 @@ inline void MAGSC::MagscReg<Point>::GloballySpatialConsistency(std::vector<std::
 				if (p3Top12T < 2 * resolution_ || p3Top12S < 2 * resolution_)
 					continue;
 				inliers_temp.clear();
+				
 				for (auto index_l : cluster_i)
 				{
 					int p4_index = index_l;
+					
 					if (compatibility_matrix(p2_index, p4_index) == 1 && compatibility_matrix(p4_index, p3_index) == 1)
 					{
 						if (Symmetrycheck(p1_index, p2_index, p3_index, p4_index))
@@ -263,9 +279,11 @@ inline Eigen::Matrix4f MAGSC::MagscReg<Point>::GNCoptimization()
 {
 	Eigen::Matrix4f trans;
 	trans = Transformation_SVD;
+	
 	int N = source_pcd_->size();
 	float div_factor_ = 1.4;
 	double max_corr_dist_ = resolution_;
+	
 	std::vector<double> s(N, 1.0);
 	pcl::transformPointCloud(*source_pcd_, *source_pcd_, trans);
 	float niu;
@@ -295,6 +313,7 @@ inline Eigen::Matrix4f MAGSC::MagscReg<Point>::GNCoptimization()
 				{
 					continue;
 				}
+				
 				q << source_pcd_->points[c].x, source_pcd_->points[c].y, source_pcd_->points[c].z;
 				p << target_pcd_->points[c].x, target_pcd_->points[c].y, target_pcd_->points[c].z;
 
@@ -366,10 +385,11 @@ inline void MAGSC::MagscReg<Point>::align()
 
 	std::vector<std::set<int>> Cluster_candidate;//cluster candidate
 	std::vector<std::pair<int, std::pair<int, int>>> Cluster_candidate_size;//cluster candidate size for sort
-	//std::vector<int> search_index;
 	std::vector<std::vector<std::pair<int, int>>> Correlation_degree;//correaltion degree
+	
 	Graphcluster(Cluster_candidate, Cluster_candidate_size, Correlation_degree);
 	std::cout << "/*------finish Graphcluster-----*/" << std::endl;
+	
 	std::sort(Cluster_candidate_size.rbegin(), Cluster_candidate_size.rend());
 
 	std::vector<int> maximum_consensus_index;
@@ -387,8 +407,8 @@ inline void MAGSC::MagscReg<Point>::align()
 		inlierTpcd->push_back(target_pcd_->points[i]);
 	}
 
-	pcl::io::savePLYFile(S_path_, *inlierSpcd);
-	pcl::io::savePLYFile(T_path_, *inlierTpcd);
+	//pcl::io::savePLYFile(S_path_, *inlierSpcd);
+	//pcl::io::savePLYFile(T_path_, *inlierTpcd);
 
 	pcl::registration::TransformationEstimationSVD<Point, Point> SVD_estimator;
 	SVD_estimator.estimateRigidTransformation(*inlierSpcd, *inlierTpcd, Transformation_SVD);
