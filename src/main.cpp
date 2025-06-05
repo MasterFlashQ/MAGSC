@@ -33,9 +33,6 @@ int main(int argc,char** argv)
 	// 3. resolution threshold (default 0.1)
 	double resolution = atof(argv[3]);
 
-	std::string S_path = argv[4];
-	std::string T_path = argv[5];
-
 	pcl::PointCloud<pcl::PointXYZ>::Ptr origin_cloudS(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr origin_cloudT(new pcl::PointCloud<pcl::PointXYZ>);
 
@@ -61,7 +58,6 @@ int main(int argc,char** argv)
 	Magsc.setResolution(resolution);
 	Magsc.setSourcepcd(corrS);
 	Magsc.setTargetpcd(corrT);
-	Magsc.setMSpath(S_path, T_path);
 	Magsc.align();
 	auto end = std::chrono::system_clock::now();
 	std::cout << "/*MAGSC time cost:" << double(std::chrono::duration_cast<std::chrono::milliseconds>(end - sta).count()) / 1000.0 << std::endl;
