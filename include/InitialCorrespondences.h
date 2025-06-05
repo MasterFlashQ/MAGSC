@@ -8,9 +8,8 @@
 * Email: fq.meng@student.cumtb.edu.cn
 * See LICENSE for the license information
 //=======================================================================================================
-*/
-* Thanks to the work of Yan, et al:
-* https://github.com/WPC-WHU/GROR
+//Thanks to the work of Yan, et al:
+//https://github.com/WPC-WHU/GROR
 */
 
 #ifndef INITIALCORRESPONDENCES_H_
