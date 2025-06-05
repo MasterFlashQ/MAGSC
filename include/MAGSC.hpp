@@ -407,9 +407,6 @@ inline void MAGSC::MagscReg<Point>::align()
 		inlierTpcd->push_back(target_pcd_->points[i]);
 	}
 
-	//pcl::io::savePLYFile(S_path_, *inlierSpcd);
-	//pcl::io::savePLYFile(T_path_, *inlierTpcd);
-
 	pcl::registration::TransformationEstimationSVD<Point, Point> SVD_estimator;
 	SVD_estimator.estimateRigidTransformation(*inlierSpcd, *inlierTpcd, Transformation_SVD);
 	Transformation_final = GNCoptimization();
