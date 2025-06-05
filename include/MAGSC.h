@@ -66,12 +66,6 @@ namespace MAGSC
 			return Transformation_SVD;
 		}
 
-		void setMSpath(std::string S_path, std::string T_path)
-		{
-			S_path_ = S_path;
-			T_path_ = T_path;
-		}
-
 	private:
 		void computeCompatibility();
 		void Graphcluster(std::vector<std::set<int>> &Cluster_candidate_, 
@@ -94,7 +88,6 @@ namespace MAGSC
 		Eigen::Matrix4f Transformation_SVD = Eigen::Matrix4f::Identity();
 		Eigen::Matrix4f Transformation_final = Eigen::Matrix4f::Identity();
 
-		std::string S_path_, T_path_;
 	};
 }
 
