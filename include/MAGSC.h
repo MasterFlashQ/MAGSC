@@ -8,9 +8,8 @@
 * Email: fq.meng@student.cumtb.edu.cn
 * See LICENSE for the license information
 //=======================================================================================================
-*/
-* Thanks to the work of Zhou, et al:
-* https://github.com/isl-org/FastGlobalRegistration
+//Thanks to the work of Zhou, et al:
+//https://github.com/isl-org/FastGlobalRegistration
 */
 
 #include <Eigen/Core>
