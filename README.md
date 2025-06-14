@@ -5,8 +5,8 @@
 
 
 ## Requirements
-- CMake
-- PCL
+- CMake>=3.5
+- PCL>=1.8.1
 - OpenMP
 
 ## Usage
