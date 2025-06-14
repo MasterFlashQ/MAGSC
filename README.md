@@ -1,6 +1,8 @@
 # MAGSC
 ***MAGSC: Globally Spatial Consistency-based Maximum Consensus for Efficient Point Cloud Registration***
-![技术路线](https://github.com/user-attachments/assets/6c499721-2334-4fb2-a0fb-9ca835260c7f)
+
+![技术路线](https://github.com/user-attachments/assets/edcdb969-4e4e-4774-bda7-9a2c26f8c38d)
+
 
 ## Requirements
 - CMake
