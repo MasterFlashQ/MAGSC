@@ -17,5 +17,5 @@ The program is run with three input parameters:
 
 Example:
 ```
-$ ./MAGSCReg ./data/src.ply ./data/tgt.ply 0.1
+$ ./MAGSCReg src.ply tgt.ply 0.1
 ```
