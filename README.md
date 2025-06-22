@@ -19,3 +19,4 @@ Example:
 ```
 $ ./MAGSCReg src.ply tgt.ply 0.1
 ```
+![配准](https://github.com/user-attachments/assets/1c5e5419-b6cd-47c1-895f-81ce434b2876)
